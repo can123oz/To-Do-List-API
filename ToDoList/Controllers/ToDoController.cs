@@ -22,10 +22,14 @@ namespace ToDoList.Controllers
         }
 
         [HttpGet("Tasks")]
-        public List<MyTask> Tasks()
+        public IActionResult Tasks()
         {
             var myTasks = _toDoService.GetAll();
-            return myTasks;
+            if (myTasks != null)
+            {
+                return Ok(myTasks);
+            }
+            return BadRequest();
         }
 
         [HttpGet("Tasks/{id}")]
@@ -66,10 +70,14 @@ namespace ToDoList.Controllers
         }
 
         [HttpGet("Findundone")]
-        public List<MyTask> Findundone()
+        public IActionResult Findundone()
         {
             var undoneTasks = _toDoService.FindUndone();
-            return undoneTasks;
+            if(undoneTasks != null)
+            {
+                return Ok(undoneTasks);
+            }
+            return BadRequest();
         }
 
         [HttpGet("Finishedtask/{id}")]
