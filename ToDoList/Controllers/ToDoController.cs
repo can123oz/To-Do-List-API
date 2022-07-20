@@ -21,40 +21,48 @@ namespace ToDoList.Controllers
             _toDoService = toDoService; 
         }
 
-        [HttpGet]
-        public List<MyTask> Get()
+        [HttpGet("Tasks")]
+        public List<MyTask> Tasks()
         {
             var myTasks = _toDoService.GetAll();
             return myTasks;
         }
 
-        [HttpGet("Getsingle/{id}")]
-        public MyTask GetSingle(int id)
+        [HttpGet("Tasks/{id}")]
+        public IActionResult Tasks([FromRoute]int id)
         {
             var findedTask = _toDoService.GetTask(id);
-            return findedTask;
+            if(findedTask != null)
+            {
+                return Ok(findedTask);
+            }
+            return BadRequest();
         }
 
-        [HttpPost("Add")]
-        public IActionResult Add(MyTask myTask)
+        [HttpPost("Tasks")]
+        public IActionResult Tasks([FromBody]MyTask myTask)
         {
             myTask.Status = false;
             _toDoService.AddTask(myTask);
             return Ok(myTask);
         }
 
-        [HttpPut("Update")]
-        public IActionResult Update(MyTask myTask)
+        [HttpPut("Update/{id}")]
+        public IActionResult Update([FromBody]MyTask myTask, [FromRoute]int id)
         {
+            myTask.Id = id;
             var updatedTask = _toDoService.UpdateTask(myTask);
-            return Ok(updatedTask);
+            if(updatedTask != null)
+            {
+                return Ok(updatedTask);
+            }
+            return BadRequest();
         }
 
         [HttpDelete("Delete/{id}")]
-        public IActionResult Delete(int id)
-        {
-            _toDoService.DeleteTask(id);
-            return Ok();
+        public bool Delete([FromRoute]int id)
+        {    
+            return _toDoService.DeleteTask(id);
         }
 
         [HttpGet("Findundone")]
@@ -65,10 +73,14 @@ namespace ToDoList.Controllers
         }
 
         [HttpGet("Finishedtask/{id}")]
-        public IActionResult FinishedTask(int id)
+        public IActionResult FinishedTask([FromRoute]int id)
         {
             var changedTask = _toDoService.ChangeToTrue(id);
-            return Ok(changedTask);
+            if(changedTask != null)
+            {
+                return Ok(changedTask);
+            }
+            return BadRequest();
         }
     }
 }

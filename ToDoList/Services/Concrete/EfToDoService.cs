@@ -61,18 +61,25 @@ namespace ToDoList.Services.Concrete
         public MyTask GetTask(int id)
         {
             var myTask = _db.MyTasks.FirstOrDefault(p => p.Id == id);
-            return myTask;
+            if (myTask != null)
+            {
+                return myTask;
+            }
+            return null;
         }
 
         public MyTask UpdateTask(MyTask myTask)
         {
             var updatedTask = _db.MyTasks.FirstOrDefault(p => p.Id == myTask.Id);
-            updatedTask.Status = myTask.Status;
-            updatedTask.Description = myTask.Description;
-            updatedTask.Title = myTask.Title;
-            _db.SaveChanges();
-            return updatedTask;
+            if (updatedTask != null)
+            {
+                updatedTask.Status = myTask.Status;
+                updatedTask.Description = myTask.Description;
+                updatedTask.Title = myTask.Title;
+                _db.SaveChanges();
+                return updatedTask;
+            }
+            return null;
         }
-
     }
 }
