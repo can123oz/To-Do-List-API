@@ -52,9 +52,9 @@ namespace ToDoList.Services.Concrete
             return undoneTasks;
         }
 
-        public List<MyTask> GetAll()
+        public async Task<List<MyTask>> GetAll()
         {
-            var myTasks = _db.MyTasks.ToList();
+            var myTasks = await _db.MyTasks.ToListAsync();
             return myTasks;
         }
 

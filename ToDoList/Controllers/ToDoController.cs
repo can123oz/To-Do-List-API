@@ -22,9 +22,9 @@ namespace ToDoList.Controllers
         }
 
         [HttpGet("Tasks")]
-        public IActionResult Tasks()
+        public async Task<IActionResult> Tasks()
         {
-            var myTasks = _toDoService.GetAll();
+            var myTasks = await _toDoService.GetAll();
             if (myTasks != null)
             {
                 return Ok(myTasks);

@@ -8,7 +8,7 @@ namespace ToDoList.Services.Abstract
 {
     public interface IToDoService
     {
-        List<MyTask> GetAll();
+        Task<List<MyTask>> GetAll();
         MyTask GetTask(int id);
         bool DeleteTask(int id);
         MyTask UpdateTask(MyTask task);

@@ -11,13 +11,12 @@ namespace ToDoList
 {
     public class Startup
     {
+        public IConfiguration _configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -25,7 +24,7 @@ namespace ToDoList
             services.AddControllers();
 
             services.AddDbContext<Entity.Context.DatabaseContext>(
-        options => options.UseSqlServer("Server = DESKTOP-07T1LR2; Database = Todo; Trusted_Connection = True;")); //onemli
+        options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"))); //hide connection string in appsettings json.
 
             services.AddTransient<IToDoService, EfToDoService>();
 
