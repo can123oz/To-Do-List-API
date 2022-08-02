@@ -1,16 +1,19 @@
 ﻿using Entity.Context;
 using Entity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ToDoList.Services.Abstract;
 
 namespace ToDoList.Controllers
 {
+    [Authorize]
     [Route("/[controller]")]
     [ApiController]
     public class ToDoController : ControllerBase
@@ -89,6 +92,32 @@ namespace ToDoList.Controllers
                 return Ok(changedTask);
             }
             return BadRequest();
+        }
+
+        [HttpGet("CurrentUser")]
+        public IActionResult CurrentUser()
+        {
+            var user = GetCurrentUser();
+            if (user != null)
+            {
+                return Ok($"Hello {user.UserName} you are an admin.");
+            }
+            return BadRequest();
+        }
+
+        private User GetCurrentUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+                return new User
+                {
+                    UserName = userClaims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value,
+                    Email = userClaims.FirstOrDefault(p => p.Type == ClaimTypes.Email)?.Value,
+                };
+            }
+            return null;
         }
     }
 }
